@@ -3,16 +3,22 @@ networks:
   cassandra:  # docker network where all cassandra nodes will be put in
 services:
   cass1:
-    image: cassandra:4.0   # better to use a specific version, if you want to control upgrades 
+    image: cassandra:4.0   # better to use a specific version, if you want to control upgrades
     container_name: cass1
     hostname: cass1
-    mem_limit: 2g  # It's not strictly required, but it's better to have some memory limit
+    mem_limit: 5g  # It's not strictly required, but it's better to have some memory limit
     networks:
       - cassandra
     ports:
-      - "7003:7000"  # Expose native binary CQL port for your apps
+      - "7001:7000"  # Expose native binary CQL port for your apps
     volumes:
       - ./data/cass1:/var/lib/cassandra    # This is the volume that will persist data for cass1 node
+    healthcheck: &healthcheck
+      test: "[ $$(ss -lH '( sport = :7000 )' | wc -l) -ne 0 ] || exit 1"
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
     environment: &environment    # Declare and save environments variables into "environment"
         CASSANDRA_SEEDS: "cass1"
         CASSANDRA_CLUSTER_NAME: InfiniSoft
@@ -24,24 +30,30 @@ services:
     image: cassandra:4.0
     container_name: cass2
     hostname: cass2
-    mem_limit: 2g
+    mem_limit: 5g
     networks:
       - cassandra
     ports:
-      - "7001:7000"  # Expose native binary CQL port for your apps
+      - "7002:7000"  # Expose native binary CQL port for your apps
+    depends_on:
+      - cass1
     volumes:
       - ./data/cass2:/var/lib/cassandra    # This is the volume that will persist data for cass2 node
+    healthcheck: *healthcheck
     environment: *environment    # point to "environment" to use the same environment variables as cass1
 
   cass3:
     image: cassandra:4.0
     container_name: cass3
     hostname: cass3
-    mem_limit: 2g
+    mem_limit: 5g
     networks:
       - cassandra
     ports:
-      - "7002:7000"  # Expose native binary CQL port for your apps
+      - "7003:7000"  # Expose native binary CQL port for your apps
+    depends_on:
+      - cass2
     volumes:
       - ./data/cass3:/var/lib/cassandra    # This is the volume that will persist data for cass3 node
+    healthcheck: *healthcheck
     environment: *environment    # point to "environment" to use the same environment variables as cass1
