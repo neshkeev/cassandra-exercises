@@ -1,4 +1,4 @@
-label,video id,added date,title
+label,video id,created date,title
 cassandra,2649ea61-24bd-11e5-a993-8138354b7e31,2020-04-29,History of NoSql and Cassandra
 cassandra,645e8024-14bd-10e5-9743-8238356b7e32,2021-01-07,Cassandra from Datastax
 cassandra,3457f7de-54bd-31e7-155e-8738355b7e3a,2021-08-18,Cassandra for all
