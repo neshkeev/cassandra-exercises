@@ -6,7 +6,6 @@ services:
     image: cassandra:4.0   # better to use a specific version, if you want to control upgrades
     container_name: cass1
     hostname: cass1
-    mem_limit: 5g  # It's not strictly required, but it's better to have some memory limit
     networks:
       - cassandra
     ports:
@@ -32,7 +31,6 @@ services:
     image: cassandra:4.0
     container_name: cass2
     hostname: cass2
-    mem_limit: 5g
     networks:
       - cassandra
     ports:
@@ -51,7 +49,6 @@ services:
     image: cassandra:4.0
     container_name: cass3
     hostname: cass3
-    mem_limit: 5g
     networks:
       - cassandra
     ports:
