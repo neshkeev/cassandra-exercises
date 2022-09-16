@@ -32,22 +32,22 @@ Also shown how hinted hadoffs and read repairs assist in reaching a desired cons
 1. Check current consistency level: `CONSISTENCY`
 1. Set the consistency level to TWO: `CONSISTENCY TWO`
 1. Select the `education` keyspace: `USE education;`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'cassandra';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'cassandra';`
 1. Turn off the `cass3` node:
     - Enter the cass3 container: `docker exec -it cass3`
     - Drain memtables: `nodetool drain`
     - Stop cassandra daemon: `nodetool stopdaemon`
 1. Back to `cass1`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'cassandra';`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'cassandra';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. Set the consistency level to `ONE`: `CONSISTENCY ONE`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. Set the consistency level to `TWO`: `CONSISTENCY TWO`
 1. Insert a new row into the `advance` partition: `INSERT INTO videos_by_label (label, created_at, video_id, title) VALUES ('advance', '2022-02-08', uuid(), 'Cassandra Drivers');`
 1. Set the consistency level to `ONE`: `CONSISTENCY ONE`
 1. Insert a new row into the `advance` partition: `INSERT INTO videos_by_label (label, created_at, video_id, title) VALUES ('advance', '2022-02-08', uuid(), 'Cassandra Drivers');`
 1. Set the consistency level to `TWO`: `CONSISTENCY TWO`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 
 ## Hinted Handoffs
 
@@ -60,10 +60,10 @@ Also shown how hinted hadoffs and read repairs assist in reaching a desired cons
 1. Insert a new row into the `advance` partition: `INSERT INTO videos_by_label (label, created_at, video_id, title) VALUES ('advance', '2022-09-01', uuid(), 'Cassandra Performance Tunning');`
 1. In a new terminal check the file system of `cass1` for storred hints: `ls -l /var/lib/cassandra/hints/`
 1. Set the consistency level to `ONE`: `CONSISTENCY ONE`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'cassandra';`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'cassandra';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. In a new terminal start the `cass2` container: `docker start cass2`
-1. In `cass1` execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. In `cass1` execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. In a new terminal check the file system of `cass1` for storred hints: `ls -l /var/lib/cassandra/hints/`
 1. Start the `cass3` container: `docker start cass3`
 1. Check the file system of `cass1` for storred hints: `ls -l /var/lib/cassandra/hints/`
@@ -78,21 +78,21 @@ Also shown how hinted hadoffs and read repairs assist in reaching a desired cons
 1. Examine the content of the `./data/cass2/data/education` directory: `ls ./data/cass2/data/education`
 1. Remove the content of the `./data/cass2/data/education` directory: `rm -rfv ./data/cass2/data/education/*`
 1. Set the consistency level to `ONE`: `CONSISTENCY ONE`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. Turn off the `cass3` container:
     - Enter the cass3 container: `docker exec -it cass3`
     - Drain memtables: `nodetool drain`
     - Stop cassandra daemon: `nodetool stopdaemon`
 1. Start the `cass2` container: `docker start cass2`
 1. Ensure the `cass2` is up: `nodetool status`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. Start the `cass3` container: `docker start cass3`
 1. Ensure the `cass3` is up: `nodetool status`
 1. Set the consistency level to `TWO`: `CONSISTENCY TWO`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
 1. Turn off the `cass3` container:
     - Enter the cass3 container: `docker exec -it cass3`
     - Drain memtables: `nodetool drain`
     - Stop cassandra daemon: `nodetool stopdaemon`
 1. In `cass1` set the the consistency level to `ONE`: `CONSISTENCY ONE`
-1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE tag = 'advance';`
+1. Execute the follwing query: `SELECT * FROM videos_by_label WHERE label = 'advance';`
