@@ -50,7 +50,7 @@ The goal of the exercise is to get familiar with write and read paths and compat
 
 ## Compation Strategies
 
-1. Setup the `education` schema: `cqlsh --file=/mnt/script/setup_education_schema.cql`
+1. Setup the `education` schema: `cqlsh --file=/mnt/scripts/setup_education_schema.cql`
 1. Start a `cqlsh` session: `cqlsh`
 1. Select the `education` keyspace: `USE education`
 1. Add a row: `INSERT INTO videos_by_label (label, created_at, video_id, title) VALUES ('cassandra', dateof(now()), uuid(), 'Cassandra Advanced');`
