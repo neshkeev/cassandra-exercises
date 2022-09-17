@@ -10,6 +10,7 @@ services:
       - cassandra
     ports:
       - "7001:7000"  # Expose native binary CQL port for your apps
+      - "19041:9042"
     volumes:
       - ./data/cass1:/var/lib/cassandra    # This is the volume that will persist data for cass1 node
     healthcheck: &healthcheck
@@ -34,6 +35,7 @@ services:
       - cassandra
     ports:
       - "7002:7000"  # Expose native binary CQL port for your apps
+      - "19042:9042"
     depends_on:
       - cass1
     volumes:
@@ -51,6 +53,7 @@ services:
       - cassandra
     ports:
       - "7003:7000"  # Expose native binary CQL port for your apps
+      - "19043:9042"
     depends_on:
       - cass2
     volumes:

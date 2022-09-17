@@ -10,6 +10,7 @@ services:
       - cassandra
     ports:
       - "7001:7000"  # Expose native binary CQL port for your apps
+      - "19041:9042"
     volumes:
       - ./data/cass1:/var/lib/cassandra    # This is the volume that will persist data for cass1 node
       - ./scripts:/mnt/scripts
