@@ -1,12 +1,4 @@
 
-CREATE KEYSPACE education
-WITH replication = {
-  'class': 'SimpleStrategy',
-  'replication_factor': 1
-};
-
-USE education;
-
 CREATE TABLE videos_by_title_year (
   title TEXT,
   year INT,

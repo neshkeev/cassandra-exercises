@@ -14,11 +14,74 @@ The goal of the exercise is to get familiar with write and read paths and compat
 1. If any of the docker containers fail, restart it: `docker start cass1`
 1. Enter the `cass1` docker container: `docker exec -it cass1 bash`
 1. Examine the cluster's state: `nodetool status`
+1. Start a cqlsh session: `cqlsh`
+1. Create a keyspace: `CREATE KEYSPACE ks1 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 2};`
+
+## Tabe with a single column primary key
+
+1. Create a table: `CREATE TABLE t1 (id int primary key, v text);`
+1. Execute the following insert statements:
+    - (Columns are not specified): `INSERT INTO t1 VALUES(1,'a');`
+    - `INSERT INTO t1(id,v) VALUES(1,'a');`
+    - `INSERT INTO t1(id,v) VALUES(2,'b');`
+    - `INSERT INTO t1(id,v) VALUES(3,'c');`
+    - `INSERT INTO t1(id) VALUES(4);`
+    - (The primary key is not set): `INSERT INTO t1(v) VALUES('d');`
+1. Check if the records are in the table: `SELECT * FROM t1;`
+1. No unique constraint violation: `INSERT INTO t1(id,v) VALUES(2,'bbb');`
+1. Check the record: `SELECT * FROM t1 WHERE id=2;`
+1. Lightweight Trasaction (LWT): `INSERT INTO t1(id,v) VALUES(3,'ссс') IF NOT EXISTS;`
+1. Check the record: `SELECT * FROM t1 WHERE id=3;`
+1. Update a record: `UPDATE t1 SET v='сde' WHERE id=3;`
+1. Check the updated record: `SELECT * FROM t1 WHERE id=3;`
+1. Update a nonexisting record: `UPDATE t1 SET v='xyz' WHERE id=10;`
+1. Check the inserted record: `SELECT * FROM t1 WHERE id=10;`
+1. Lightweight Transaction (LWT): `UPDATE t1 SET v='xyz' WHERE id=11 IF EXISTS;`
+1. Check the inserted record: `SELECT * FROM t1 WHERE id=11;`
+1. Delete a column: `DELETE v FROM t1 WHERE id=10;`
+1. Check the record: `SELECT * FROM t1 WHERE id=10;`
+1. Delete a record: `DELETE FROM t1 WHERE id=4;`
+1. Check the record: `SELECT * FROM t1 WHERE id=4;`
+1. Select with the `IN` clause: `SELECT * FROM t1 WHERE id IN (1,2,5);`
+1. Select records with id > 2: `SELECT * FROM t1 WHERE id > 2;`
+1. Select records with `v = 'a'`: `SELECT * FROM t1 WHERE v='a';`
+1. Use `ALLOW FILTERING` to select records with `v = 'a'`: `SELECT * FROM t1 WHERE v='a' ALLOW FILTERING;`
+1. (BAD): Create an index to select records with `v = 'a'`:
+    - `CREATE INDEX x1 ON t1(v);`
+    - `SELECT * FROM t1 WHERE v='a';`
+1. Use range: `SELECT * FROM t1 WHERE id IN (1,2,5) AND v>'a' AND v<'x';`
+
+## Tabe with a two columns primary key
+
+1. Create a new table: `CREATE TABLE t2 (id int, no int, v1 text, v2 text, primary key(id, no));`
+1. Insert records into the table:
+    - (Columns are not specified): `INSERT INTO t2 VALUES(1,'a');`
+    - `INSERT INTO t2(id,no,v1,v2) VALUES(1,1,'a','a'); `
+    - `INSERT INTO t2(id,no) VALUES(1,2); `
+    - (The primary key is not fully set): `INSERT INTO t2(id,v1) VALUES(1,'b');`
+    - `INSERT INTO t2(id,no,v1,v2) VALUES(2,2,'b','b'); `
+    - `INSERT INTO t2(id,no,v1,v2) VALUES(2,3,'c','c'); `
+    - `INSERT INTO t2(id,no,v1) VALUES(3,1,'d');`
+1. Check the records: `SELECT * FROM t2;`
+1. No unique constraint violation: `INSERT INTO t2(id,no,v1) VALUES(2,2,'bbb');`
+1. Check the record: `SELECT * FROM t2 WHERE id=2;`
+1. Update a record: `UPDATE t2 SET v1='сde' WHERE id=3;`
+1. Update the record: `UPDATE t2 SET v1='сde' WHERE id=3 AND no=1;`
+1. Check the record: `SELECT * FROM t2 WHERE id=3 and no=1;`
+1. Update a nonexisting record: `UPDATE t2 SET v1='xyz' WHERE id=10 and no=10;`
+1. Check the record: `SELECT * FROM t2 WHERE id=10;`
+1. Select with the `IN` clause: `SELECT * FROM t2 WHERE id IN (1,2,5);`
+1. Select: `SELECT * FROM t2 WHERE id=2 AND no>2;`
+1. `SELECT * FROM t2 WHERE id=2 AND no IN (3,4,5);`
+1. `SELECT * FROM t2 WHERE id=1 AND v1='a';`
+1. `SELECT * FROM t2 WHERE id IN (1,2,5) AND no=1 AND v1>'a' AND v1<'x';`
 
 ## Insertion
 
 1. (Optional) Examine the cql script: `cat /mnt/scripts/setup_education_schema.cql`
-1. Setup the `education` schema: `cqlsh --file="/mnt/scripts/setup_education_schema.cql"`
+1. Start a cqlsh session: `cqlsh`
+1. Enter your keyspace: `USE `
+1. Setup the keyspace: `SOURCE '/mnt/scripts/setup_schema.cql'`
 1. Enter a `cqlsh` session: `cqlsh`
 1. Select the `education` keyspace: `use education`
 1. Execute several queries:
@@ -185,4 +248,6 @@ DELETE identities['tw'] from contacts where id=1;
 SELECT * FROM contacts;
 ```
 
-SELECT dateof(now()) FROM system.local ;
+## Computing constant expressions
+
+Check the current time: `SELECT dateof(now()) FROM system.local;`
