@@ -101,26 +101,24 @@ The goal of the exercise is to get familiar with write and read paths and compat
     - `INSERT`: `INSERT INTO videos_by_title_year (title, year, created_at, description, user_id, video_id) VALUES ('Tips and Tricks with Apache Cassandra', 2022, '2021-02-03 15:15+0000', 'Learn Apache Cassandra Tips and Tricks with Professionals', 10d5c76c-8767-4db3-8050-e19e015b524c,2644c36e-14bd-11e5-839e-8438355b7e3a) IF NOT EXISTS;`
     - `UPDATE`: `UPDATE videos_by_title_year SET created_at = '2020-12-07 17:45+0000', description = 'Experts share thier experience with Apache Cassandra' WHERE title = 'Apache Cassandra for Experts' AND year = 2021 IF EXISTS;`
 
-## TTL
+## TTL (Time to Live)
 
-TTL (Time to Live):
-    - For the whole row: `INSERT INTO videos_by_title_year (title, year, created_at, description, user_id, video_id) VALUES ('Fun with Apache Cassandra', 2020, '2020-02-03 15:15+0000', 'Memes and jokes about Apache Cassandra', 10d5c76c-8767-4db3-8050-e19e015b524c, 2644c36e-14bd-11e5-839e-8438355b7e3a) USING TTL 10;`
-    - `SELECT title, year, description, ttl(description) FROM videos_by_title_year WHERE title = 'Fun with Apache Cassandra' AND year = 2020;`
-    - For a column: `UPDATE videos_by_title_year  USING TTL 10 SET description = 'This message will self destuct in 10 seconds' WHERE title = 'Apache Cassandra for Experts' AND year = 2021;`
-    - `SELECT title, year, description, ttl(description) FROM videos_by_title_year WHERE title = 'Apache Cassandra for Experts' AND year = 2021;`
-    - For a table:
-        - `CREATE TABLE default_ttl(id TEXT PRIMARY KEY, name TEXT) WITH Default_time_to_live=10;`
-        - `INSERT INTO default_ttl VALUES ('hello', 'world');`
-        - `SELECT id, name, TTL(name) FROM default_ttl;`
-    - Add `USING TTL 0` to remove TTL
+1. For the whole row: `INSERT INTO videos_by_title_year (title, year, created_at, description, user_id, video_id) VALUES ('Fun with Apache Cassandra', 2020, '2020-02-03 15:15+0000', 'Memes and jokes about Apache Cassandra', 10d5c76c-8767-4db3-8050-e19e015b524c, 2644c36e-14bd-11e5-839e-8438355b7e3a) USING TTL 10;`
+1. `SELECT title, year, description, ttl(description) FROM videos_by_title_year WHERE title = 'Fun with Apache Cassandra' AND year = 2020;`
+1. For a column: `UPDATE videos_by_title_year  USING TTL 10 SET description = 'This message will self destuct in 10 seconds' WHERE title = 'Apache Cassandra for Experts' AND year = 2021;`
+1. `SELECT title, year, description, ttl(description) FROM videos_by_title_year WHERE title = 'Apache Cassandra for Experts' AND year = 2021;`
+1. For a table:
+     - `CREATE TABLE default_ttl(id TEXT PRIMARY KEY, name TEXT) WITH Default_time_to_live=10;`
+     - `INSERT INTO default_ttl VALUES ('hello', 'world');`
+     - `SELECT id, name, TTL(name) FROM default_ttl;`
+1. Add `USING TTL 0` to remove TTL
 
 ## Delete
 
-`DELETE`:
-    - Delete a row: `DELETE FROM videos_by_title_year WHERE title = 'Introduction To Apache Cassandra' AND year = 2014;`
-    - Delete a column: `DELETE description FROM videos_by_title_year WHERE title = 'Apache Cassandra for Experts' AND year = 2021;`
-    - Delete all rows: `TRUNCATE default_ttl;`
-    - Drop table: `DROP TABLE default_ttl;`
+1. Delete a row: `DELETE FROM videos_by_title_year WHERE title = 'Introduction To Apache Cassandra' AND year = 2014;`
+1. Delete a column: `DELETE description FROM videos_by_title_year WHERE title = 'Apache Cassandra for Experts' AND year = 2021;`
+1. Delete all rows: `TRUNCATE default_ttl;`
+1. Drop table: `DROP TABLE default_ttl;`
 
 ## Batch
 
