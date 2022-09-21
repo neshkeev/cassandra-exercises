@@ -1,0 +1,22 @@
+version: '2.4' # 2.4 is the last version that supports depends_on conditions for service health
+networks:
+  cassandra:  # docker network where all cassandra nodes will be put in
+services:
+  cass101:
+    image: cassandra:4.0
+    container_name: cass101
+    hostname: cass101
+    networks:
+      - cassandra
+    ports:
+      - "17000:7000"  # Expose native binary CQL port for your apps
+      - "29042:9042"
+    volumes:
+      - ./data/cass101:/var/lib/cassandra
+    environment:
+        CASSANDRA_SEEDS: "cass1"
+        CASSANDRA_CLUSTER_NAME: InfiniSoft
+        CASSANDRA_DC: Mars
+        CASSANDRA_RACK: West
+        CASSANDRA_NUM_TOKENS: 16
+        CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
