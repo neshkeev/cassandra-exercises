@@ -1,6 +1,6 @@
 # Abstract
 
-The goal of the exercise is to get familiar with write and read paths and compation strategies.
+The goal of the exercise is to get familiar with CQL syntax
 
 # Plan
 
