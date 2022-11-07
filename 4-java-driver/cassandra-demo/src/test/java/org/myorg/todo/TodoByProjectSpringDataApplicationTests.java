@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.ConsistencyLevel;
 import com.datastax.oss.driver.api.core.cql.BatchType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.myorg.todo.factory.statemachine.TodoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.cassandra.core.CassandraOperations;
@@ -37,21 +38,19 @@ public class TodoByProjectSpringDataApplicationTests {
 		String projectName = "Cassandra Demo";
 		String description = "Description";
 
-		List<Object> objects = getObjects(projectName);
-
-		TodoById todoById = (TodoById) objects.get(0);
-		todoById.setDescription(description);
+		TodoFactory factory = getFactory(projectName, description);
 
 		InsertOptions insertOptions = InsertOptions.builder()
 				.consistencyLevel(ConsistencyLevel.QUORUM)
 				.build();
 		ops.batchOps(BatchType.LOGGED)
-				.insert(objects, insertOptions)
+				.insert(List.of(factory.getTodoById(), factory.getTodoByProject()), insertOptions)
 				.execute();
 
 	    Assertions.assertTrue(todoByProjectRepo.existsByProject(projectName));
 		assertThat("Should contain a row in 'todo_by_project'", todoByProjectRepo.existsByProject(projectName), is(true));
 
+		TodoById todoById = factory.getTodoById();
 		Optional<TodoById> maybeTodo = todoByIdRepo.findByTodoId(todoById.getTodoId());
 		//noinspection OptionalGetWithoutIsPresent
 		Assertions.assertEquals(maybeTodo.get().getDescription(), description);
@@ -61,18 +60,19 @@ public class TodoByProjectSpringDataApplicationTests {
 		assertThat("Should contain todos", todos, is(not(empty())));
 	}
 
-	private static List<Object> getObjects(String projectName) {
+	private static TodoFactory getFactory(String projectName, String description) {
 		int daysToAdd = new Random().nextInt(10) - 5;
 		int priority = new Random().nextInt(50);
-		TodoByProject todoByProject = new TodoByProject(projectName,
-				LocalDateTime.now().plusDays(daysToAdd),
-				priority,
-				UUID.randomUUID(),
-				"Task " + new Random().nextInt(100),
-				false);
 
-		TodoById todoById = new TodoById(todoByProject);
-
-		return List.of(todoById, todoByProject);
+		return TodoFactory.of(
+				TodoFactory.builder()
+						.setProject(projectName)
+						.setDescription(description)
+						.setTodoId(UUID.randomUUID())
+						.setCompleted(false)
+						.setPriority(priority)
+						.setDueDate(LocalDateTime.now().plusDays(daysToAdd))
+						.setTitle("Task " + new Random().nextInt(100))
+		);
 	}
 }

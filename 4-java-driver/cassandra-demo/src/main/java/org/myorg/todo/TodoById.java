@@ -39,12 +39,13 @@ public class TodoById {
     public TodoById() {
     }
 
-    public TodoById(TodoByProject todo) {
-        this.todoId = todo.getTodoId();
-        this.title = todo.getTitle();
-        this.dueDate = todo.getDueDate();
-        this.priority = todo.getPriority();
-        this.completed = todo.isCompleted();
+    public TodoById(UUID todoId, String title, String description, LocalDateTime dueDate, int priority, boolean completed) {
+        this.todoId = todoId;
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.priority = priority;
+        this.completed = completed;
     }
 
     public UUID getTodoId() {
