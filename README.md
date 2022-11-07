@@ -21,7 +21,7 @@ The goal of the exercise is to get familiar with write and read paths and compat
 1. Watch the commitlog directory for changes: `watch -n 1 -d "ls -lh /var/lib/cassandra/commitlog/"`
 1. In a new terminal/ssh session enter the `cass1` docker container: `docker exec -it cass1 bash`
 1. Start the `cassandra-stress` tool to write 250K records to the node:
-  `/opt/cassandra/tools/bin/cassandra-stress write no-warmup n=250000 -port native=9041 -rate threads=1`
+  `/opt/cassandra/tools/bin/cassandra-stress write no-warmup n=250000 -port native=9042 -rate threads=1`
 1. Switch to the terminal with the `watch` command. CTRL+C it when the `cassandra-stress` tool is done
 1. Examine the `keyspace1.standard1` table's statistics: `nodetool cfstats keyspace1.standard1`
 1. Review the "Memtable \*" statistics
@@ -34,18 +34,18 @@ The goal of the exercise is to get familiar with write and read paths and compat
 ## Read Path
 
 1. Force cassandra flush memtables to the disk: `nodetool flush`
-1. Examine the size of the bloom filter: `ls -lh /var/lib/cassandra/data/keyspace1/standard1-*/*Filter.db`
+1. Examine the size of the bloom filter: `du -sh /var/lib/cassandra/data/keyspace1/standard1-*/*Filter.db`
 1. Start a new `cqlsh` session: `cqlsh`
 1. Check the bloom filter's configuration: `describe keyspace keyspace1`
 1. Look for `bloom_filter_fp_chance` attribute
 1. Reduce the probability for false positives in the bloom filter: `ALTER TABLE keyspace1.standard1 WITH bloom_filter_fp_chance = 0.0001;`
 1. Verify the setting got changed: `describe keyspace keyspace1`
 1. Update the SSTables: `nodetool upgradesstables --include-all-sstables`
-1. Examine the size of the bloom filter file: `ls -lh /var/lib/cassandra/data/keyspace1/standard1-*/*Filter.db`
+1. Examine the size of the bloom filter file: `du -sh /var/lib/cassandra/data/keyspace1/standard1-*/*Filter.db`
 1. Start a new `cqlsh` session: `cqlsh`
 1. Remove the bloom filter: `ALTER TABLE keyspace1.standard1 WITH bloom_filter_fp_chance = 1.0;`
 1. Update the SSTables: `nodetool upgradesstables --include-all-sstables`
-1. Examine the size of the bloom filter file: `ls -lh /var/lib/cassandra/data/keyspace1/standard1-*/*Filter.db`
+1. Examine the bloom filter file: `ls -lh /var/lib/cassandra/data/keyspace1/standard1-*/*Filter.db`
 1. Analyze the bloom filter statistics: `nodetool cfstats keyspace1.standard1`
 
 ## Compation Strategies
