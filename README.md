@@ -21,4 +21,4 @@ The goal of the exercise is to get familiar with `nodetool` - the main cassandra
 1. Shutdown the nodes:
     - Flush memtables: `nodetool drain`
     - Stop cassandra daemon: `nodetool stopdaemon`
-    - Enter the other 2 tools and stop them too
+    - Enter the other 2 nodes and stop them too
