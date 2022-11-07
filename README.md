@@ -1,6 +1,6 @@
 # Abstract
 
-The goal of the exercise is to get familiar managing cassandra's nodes
+The goal of the exercise is to get familiar managing cassandra's node management
 
 # Plan
 
