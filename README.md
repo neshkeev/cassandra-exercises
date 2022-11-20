@@ -1,16 +1,37 @@
-# Apache Cassandra Course
+# Abstract
 
-The course consists of 6 modules:
+The goal of the exercise is to create a schema for hotels and reservations
 
-1. Basics of Apache Cassandra:
-    - A simple Cassandra deploy to Docker is covered in the [1.1-initial-cassandra-setup](https://github.com/neshkeev/cassandra-eas014-c4/tree/1.1-initial-cassandra-setup) branch
-    - Apache Cassandra's node management is covered in the [1.2-cassandra-nodes](https://github.com/neshkeev/cassandra-eas014-c4/tree/1.2-cassandra-nodes) branch
-    - Replications and Consistency is covered in the [1.3-replication-consistency](https://github.com/neshkeev/cassandra-eas014-c4/tree/1.3-replication-consistency) branch
-    - Read, Write and Compaction processes are covered in the [1.4-read-write-compaction](https://github.com/neshkeev/cassandra-eas014-c4/tree/1.4-read-write-compaction) branch
-1. The basic notion of cql is given in the [2-cql](https://github.com/neshkeev/cassandra-eas014-c4/tree/2-cql) branch
-1. Apache Cassandra's view on data modeling and schema design
-1. How to use Apache Cassandra from java is covered in the [4-java-driver](https://github.com/neshkeev/cassandra-eas014-c4/tree/4-java-driver) branch
-1. Application Performance Metrics are in the [5-metrics](https://github.com/neshkeev/cassandra-eas014-c4/tree/5-metrics) branch
-1. Administration and cluster management:
-    - The node management is in the [6.1-node-management](https://github.com/neshkeev/cassandra-eas014-c4/tree/6.1-node-management) branch
-    - Snapshots and backup is in the [6.2-snapshots](https://github.com/neshkeev/cassandra-eas014-c4/tree/6.2-snapshots) branch
+# Plan
+
+## Preparation
+
+1. Stop the previously started cluster if needed. Refer to the `1-initial-cassandra-setup` for instructions (`nodetool drain && nodetool stopdaemon`)
+1. Remove the data directory: `rm -rf ./data`
+1. Start a cassandra cluster: `docker compose up`
+1. Wait for ~5 minutes for the cluster to start
+1. Monitor containers: `watch docker ps --filter name=cass`
+1. If any of the docker containers fail, restart it: `docker start cass1`
+1. Enter the `cass1` docker container: `docker exec -it cass1 bash`
+1. Examine the cluster's state: `nodetool status`
+
+## Setting up the hotel schema
+
+1. (Optional) Examine the `hotel` schema: `cat /mnt/scripts/setup_hotel_schema.cql`
+1. Setup the `reservation` schema: `cqlsh --file=/mnt/scripts/setup_hotel_schema.cql`
+1. Notice the warning `Your replication factor 3 for keyspace hotel is higher than the number of nodes 2`
+1. Start a new `cqlsh` session: `cqlsh`
+1. Enter the `hotel` keyspace: `USE hotel;`
+1. Examine the `hotels_by_id` table: `DESCRIBE hotels_by_id`
+1. Insert a new hotel: `INSERT INTO hotel.hotels_by_id(hotel_id, name, phone, address) VALUES ( 6e60aeec-7c34-4753-ab88-94f64f50c000, 'Raddison', '+79123456789', { zip: '0000', country: 'Russia', city: 'Moscow', street: 'Sadovaya', building: '53 b12' });`
+1. Select the city, street and building of the hotel: `SELECT address.city, address.street, address.city FROM hotel.hotels_by_id WHERE hotel_id = 6e60aeec-7c34-4753-ab88-94f64f50c000;`
+1. Insert a new point of interest for the hotel: `INSERT INTO hotel.hotels_by_poi(poi_name, hotel_id, name, phone, address) VALUES ('Pushkin Statue', 6e60aeec-7c34-4753-ab88-94f64f50c000, 'Raddison', '+79123456789', { zip: '0000', country: 'Russia', city: 'Moscow', street: 'Sadovaya', building: '53 b12' });`
+1. Check if there are hotels near `"Pushkin Statue"`: `select count(*) from hotel.hotels_by_poi where poi_name = 'Pushkin Statue'`
+
+## Setting up the reservation schema
+
+1. (Optional) Examine the `reservation` schema: `cat /mnt/scripts/setup_reservation_schema.cql`
+1. Setup the `reservation` schema: `cqlsh --file=/mnt/scripts/setup_reservation_schema.cql`
+1. Start a new `cqlsh` session: `cqlsh`
+1. Enter the `reservation` keyspace: `USE reservation;`
+1. Examine the tables: `DESCRIBE tables`
