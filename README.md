@@ -17,16 +17,14 @@ The goal of this exercise is to show how to use cassandra from a java project.
 
 1. Setup the `education` schema: `cqlsh --file=/mnt/scripts/setup_schema.cql`
 
-## Run the app
+## Run the script
 
-1. Change the working directory: `cd cassandra-demo`
-1. Run tests: `mvn test`
-
-## Run the tests
-
-1. Start a cqlsh session: `cqlsh`
-1. Create a keyspace: `CREATE KEYSPACE cassandra_driver_demo WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'} AND durable_writes = true;`
 1. Assign to the `CONTACT_POINT` environment variable the IP address of the host where cassandra started
 1. Assign to the `KEYSPACE_NAME` environment variable the name of the keyspace you created on the second step.
 1. Export `CONTACT_POINT` and `KEYSPACE_NAME`
-1. Run tests: `mvn test`
+1. Create a virtual environment: `python -m venv .venv`
+1. Activate the virtual environment: `source .venv/bin/activate`
+1. Ensure the virtual environment is up: `which python`
+1. Install packages: `pip install -r requirements.txt`
+1. Run the script: `python demo.py`
+1. Stop the virtual environment: `deactivate`
