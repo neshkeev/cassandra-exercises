@@ -13,11 +13,12 @@ The goal of this exercise is to show how to use cassandra from a java project.
 1. Enter the `cass1` docker container: `docker exec -it cass1 bash`
 1. Examine the cluster's state: `nodetool status`
 
-## Setup the schema
+## Run the tests
 
-1. Setup the `education` schema: `cqlsh --file=/mnt/scripts/setup_schema.cql`
-
-## Run the app
-
-1. Change the working directory: `cd cassandra-demo`
+1. Start a cqlsh session: `cqlsh`
+1. Create a keyspace (the error in the keyspace is intentional): `CREATE KEYSPACE <KEYSPACE NAME HERE> WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'} AND durable_writes = true;`
+1. Assign to the `CONTACT_POINT` environment variable the IP address of the host where cassandra started
+1. Assign to the `KEYSPACE_NAME` environment variable the name of the keyspace you created on the second step.
+1. Export `CONTACT_POINT` and `KEYSPACE_NAME`
+1. In a new terminal jump into the `driver-demo` directory: `cd driver`
 1. Run tests: `mvn test`
