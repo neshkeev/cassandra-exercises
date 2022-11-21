@@ -21,3 +21,12 @@ The goal of this exercise is to show how to use cassandra from a java project.
 
 1. Change the working directory: `cd cassandra-demo`
 1. Run tests: `mvn test`
+
+## Run the tests
+
+1. Start a cqlsh session: `cqlsh`
+1. Create a keyspace: `CREATE KEYSPACE cassandra_driver_demo WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'} AND durable_writes = true;`
+1. Assign to the `CONTACT_POINT` environment variable the IP address of the host where cassandra started
+1. Assign to the `KEYSPACE_NAME` environment variable the name of the keyspace you created on the second step.
+1. Export `CONTACT_POINT` and `KEYSPACE_NAME`
+1. Run tests: `mvn test`
