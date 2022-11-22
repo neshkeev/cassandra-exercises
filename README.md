@@ -15,7 +15,7 @@ The goal of the exercise is to get familiar with CQL syntax
 1. Enter the `cass1` docker container: `docker exec -it cass1 bash`
 1. Examine the cluster's state: `nodetool status`
 1. Start a cqlsh session: `cqlsh`
-1. Create a keyspace: `CREATE KEYSPACE ks1 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 2};`
+1. Create a keyspace: `CREATE KEYSPACE ks1 WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};`
 
 ## Tabe with a single column primary key
 
