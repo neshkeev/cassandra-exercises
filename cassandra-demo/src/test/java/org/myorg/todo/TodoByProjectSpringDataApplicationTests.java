@@ -35,10 +35,6 @@ public class TodoByProjectSpringDataApplicationTests {
 
 	@Test
 	void testSaveTaskWhenSave() {
-		System.out.println("Injected todoByProjectRepo: " + todoByProjectRepo);
-		System.out.println("Injected todoById: " + todoByIdRepo);
-		System.out.println("Injected cassandra operations: " + ops);
-
 		String projectName = "Cassandra Demo";
 		String description = "Description";
 
@@ -51,14 +47,12 @@ public class TodoByProjectSpringDataApplicationTests {
 				.insert(List.of(factory.getTodoById(), factory.getTodoByProject()), insertOptions)
 				.execute();
 
-	    Assertions.assertTrue(todoByProjectRepo.existsByProject(projectName));
 		assertThat("Should contain a row in 'todo_by_project'", todoByProjectRepo.existsByProject(projectName), is(true));
 
 		TodoById todoById = factory.getTodoById();
 		Optional<TodoById> maybeTodo = todoByIdRepo.findByTodoId(todoById.getTodoId());
 
 		//noinspection OptionalGetWithoutIsPresent
-		Assertions.assertEquals(maybeTodo.get().getDescription(), description);
 		assertThat("Should have description", maybeTodo.get().getDescription(), is(description));
 
 		List<TodoByProject> todos = todoByProjectRepo.findAllByProjectAndDueDateLessThan(projectName, LocalDateTime.now().plusDays(10));
