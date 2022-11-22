@@ -1,0 +1,28 @@
+From 7ecbfce7188c1cb127ea4ba52d6fb4e9a0a58a4e Mon Sep 17 00:00:00 2001
+From: Nikita Eshkeev <neshkeev@yandex.ru>
+Date: Tue, 22 Nov 2022 23:24:52 +0300
+Subject: [PATCH] Fix setup script
+
+Signed-off-by: Nikita Eshkeev <neshkeev@yandex.ru>
+---
+ scripts/setup-kind-multicluster.sh | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/scripts/setup-kind-multicluster.sh b/scripts/setup-kind-multicluster.sh
+index c7747c7..4582cc3 100755
+--- a/scripts/setup-kind-multicluster.sh
++++ b/scripts/setup-kind-multicluster.sh
+@@ -155,9 +155,7 @@ function create_kubeconfig() {
+ 
+   basedir=$(dirname "$output_file")
+   mkdir -p "$basedir"
+-  yq ea '. as $item ireduce({}; . *+ $item)' "$temp_dir"/*.yaml > "$output_file"
+-  # remove current-context for security
+-  yq e 'del(.current-context)' "$output_file" -i
++  kind get kubeconfig --name "$cluster_prefix""0" > "$output_file"
+ }
+ 
+ create_registry
+-- 
+2.38.0.windows.1
+
